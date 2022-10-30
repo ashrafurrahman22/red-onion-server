@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion, ObjectId, ObjectID } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 require('dotenv').config()
 const port = process.env.PORT || 5000;
 const app = express();
@@ -35,6 +36,7 @@ async function run(){
          app.get('/foods/:id', async(req, res)=>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
+            // console.log("foods query",query)
             const food = await foodCollection.findOne(query);
             res.send(food);
         });
@@ -48,12 +50,16 @@ async function run(){
         });
 
         // catch single item
-        app.get('/carts/:id', async(req, res)=>{
-            const id = req.params.id;
-            const query = {_id: ObjectId(id)};
-            const note = await cartCollection.findOne(query);
-            res.send(note);
-        })
+        app.get('/carts/:name', async(req, res)=>{
+            const id = req.params.name;
+            console.log(id);
+            const query = {_id: id};
+            // console.log(query);
+            // console.log(cartCollection);
+            const collection = await cartCollection.findOne(query);
+            console.log(collection)
+            res.send(collection);
+        });
 
         // post in carts
         app.post('/carts', async(req, res)=>{
